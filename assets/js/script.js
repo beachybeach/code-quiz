@@ -1,163 +1,188 @@
 //once button is clicked quiz questions appear and timer starts
 var timerEl = document.getElementById('timer');
 var startBtn = document.getElementById('start');
+var introEl = document.getElementById("intro");
+var quizContainer = document.getElementById("quiz");
+var questionTitle = document.getElementById("question");
+var answersEl = document.getElementById("answers");
+var statusEl = document.getElementById("status");
+var resetButton = document.getElementById("resetButton");
 
-
-var btnOne = document.createElement("button");
-btnOne.id = "btn";
-var btnTwo = document.createElement("button");
-btnOne.id = "btn";
-var btnThree = document.createElement("button");
-btnOne.id = "btn";
-var btnFour = document.createElement("button");
-btnOne.id = "btn";
-
-//function that runs the countdown timer
+//setup the timer
+var timer;
 function countdown() {
-    var timeInterval = setInterval(function () {
+    timer = setInterval(function () {
         if (timeLeft >= 1) {
             timerEl.textContent = timeLeft;
             timeLeft = timeLeft - 1;
         }
 
         if (timeLeft === 0) {
-            timerEl.textContent = '';
+            timerEl.textContent = "";
         }
-
-
     }, 1000);
 }
-var score = 0;
-var startQuestions = 0;
+
 var penalty = 5;
 var timeLeft = 60;
 
-var questions = [
-    
+var quiz = [
     {
-        question: "Stinky?",
-        answers: ["yes", "no","duh", "of course"],
-        correct: "yes"
+        question: "In The Silence of the Lambs, which city is Dr. Lecter imprisoned in?",
+        answers: ["Portland", "New York","Baltimore", "philadelphia"],
+        correct: 2,
     },
     
     {
-        question: "Smelly?",
-        answers: ["yes", "no","duh", "of course"],
-        correct: "yes"
+        question: "In the 1981 movie The Shining, which hotel did Jack and family look after?",
+        answers: ["The Westin", "The Grand Budapest Hotel", "The Roosevelt Hotel", "The Overlook Hotel"],
+        correct: 3,
     },
     
     {
-        question: "Gross?",
-        answers: ["yes", "no","duh", "of course"],
-        correct: "yes"
+        question: "In which two horror films does the quote “We all go a little mad sometimes” appear?",
+        answers: ["Psycho and Nightmare on Elm Street", "Scream and Nightmare on Elm Street","Psycho and Friday the 13th", "Psycho and Scream"],
+        correct: 3,
     },
     
     {
-        question: "Nasty?",
-        answers: ["yes", "no","duh", "of course"],
-        correct: "yes"
+        question: "How many people does Jason kill in the first Friday the 13th film?",
+        answers: ["9", "13", "0", "5"],
+        correct: 2,
     },
     
     {
-        question: "Icky?",
-        answers: ["yes", "no","duh", "of course"],
-        correct: "yes"
+        question: "Leatherface was a character in what horror film?",
+        answers: ["The Texas Chainsaw Massacre", "The Blair Witch Project","The Shining", "Carrie"],
+        correct: 0,
     },
     
     {
-        question: "Rotten?",
-        answers: ["yes", "no","duh", "of course"],
-        correct: "yes"
+        question: "What classic horror movie features a serial killer in a William Shatner mask?",
+        answers: ["Halloween", "Friday The 13th","Texas Chainsaw Massacre", "The Fog"],
+        correct: 0,
     },
+];
     
-    ];
-    
+// This will toggle class 'hidden' which will hide/reveal #intro el
+function toggleIntro() {
+    if (introEl.classList.contains("hidden")) {
+      introEl.classList.remove("hidden");
+    } else {
+      introEl.classList.add("hidden");
+    }
+  }
 
-//function that loops through the questions and their answers
-function nextQuestion() {
 
-    if (startQuestions < questions.length) {
-        
-        var oldParagraph = document.getElementById("oldText");
-        oldParagraph.remove();
+  function toggleResetButton() {
+    if (resetButton.classList.contains("hidden")) {
+      resetButton.classList.remove("hidden");
+    } else {
+      resetButton.classList.add("hidden");
+    }
+  }
+  
+  function startQuiz() {
+    var current = 0;
+    var currentQuestion = quiz[current];
+    var score - 0;
 
-        for (var i = 0; i < questions.length; i++) {
+    resetButton.onClick = function () {
+        toggleIntro();
+        resetQuiz();
+        toggleResetButton();
+    };
 
-        var questionTitle = document.getElementById("question");
-        questionTitle.textContent = questions[startQuestions].question;
+    function resetQuiz() {
+        current = 0;
+        currentQuestion = quiz[current];
+        timerLeft = 60;
+        questionTitle.innerText = "Halloween Quiz Challenge";
+        answersEl.innerHtml = null;
+    }
 
-        //answers for the question
-        var answerOne = questions[startQuestions].answers[0];
-        btnOne.textContent = answerOne;
-        
-        var answerTwo = questions[startQuestions].answers[1];
-        btnTwo.textContent = answerTwo;
+    function showResults() {
+        questionTitle.innerText = "Results";
+        answersEl.innerHtml = 
+        "You got " +
+        score + 
+        " out of " +
+        quiz.length + 
+        " right! That's " +
+        Math.floor((score / quiz.length) * 100) +
+        "%";
 
-        var answerThree = questions[startQuestions].answers[2];
-        btnThree.textContent = answerThree;
+        toggleResetButton();
 
-        var answerFour = questions[startQuestions].answers[3];
-        btnFour.textContent = answerFour;
-        
+        //stops timer
+        clearInterval(timer);
 
-        quiz.appendChild(questionTitle);
-        quiz.appendChild(btnOne);
-        quiz.appendChild(btnTwo);
-        quiz.appendChild(btnThree);
-        quiz.appendChild(btnFour);
+        //clear status
+        clearStatus();
+    }
 
-        btnOne.addEventListener("click", checkAnswers);
-        btnTwo.addEventListener("click", checkAnswers);
-        btnThree.addEventListener("click", checkAnswers);
-        btnFour.addEventListener("click", checkAnswers);
+    function clearStatus() {
+        statusEl.innerText = null;
+    }
 
-        } 
-    } 
-}
-      
+    function nextQuestion() {
+        current++;
+        currentQuestion = quiz[current];
+        updateQuestion(currentQuestion.question);
+        updateAnswers(currentQuestion.answers);
+    }
 
-function checkAnswers() {
-        var createDiv = document.createElement("div");
-        createDiv.setAttribute("id", "createDiv");
+    function updateQuestion(text) {
+        questionTitle.innerText = text;
+    }
 
-        var correctAnswer = questions[startQuestions].correct;
-        var input = document.getElementById('btn');
-        var userInput = input.textContent
-
+    function checkAnswer(index) {
 
         // correct answer
-        if (userInput.onclick === correctAnswer) {
+        if (index === currentQuestion.correct) {
+            console.log("Correct!");
             score++;
-            createDiv.textContent = "Correct!" 
+            statusEl.innerText = "Correct!"; 
             // incorrect answer
         } else {
+            console.log("Wrong!");
             timeLeft = timeLeft - penalty;
-            createDiv.textContent = "Incorrect";
+            statusEl.innerText = "Incorrect. -" + penalty + " seconds!";
         }
 
     }
 
-startBtn.addEventListener("click", countdown);
-startBtn.addEventListener("click", nextQuestion);
+    function updateAnswers(answers) {
+        //empty answers
+        answersEl.innerHTML = null;
+
+        //add answers
+        answers.forEach((answer, index) => {
+            var button = document.createElement("button");
+
+            button.innerText = answer;
+            button.onclick = () => {
+                checkAnswer(index);
+                if (current + 1 < quiz.length) {
+                    nextQuestion();
+                } else {
+                    showResults();
+                }
+            };
+            answersEl.append(button);
+        });
+    }
+    //start countdown
+    countdown();
+    //hide intro
+    toggleIntro();
+
+    //replace text with first question.
+    if (current === 0) {
+        updateQuestion(currentQuestion.question);
+        updateAnswers(currentQuestion.answers);
+    }
+  }
 
 
-
-
-
-
-
-
-
-
-//if question is answered correctly, "correct!" appears, then moves onto
-// next question
-
-//if a question is answered incorrectly "incorrect!" appears,
-// and 5 seconds are deducted from the timer
-
-//quiz ends once time runs out
-
-//score is displayed with option to enter intials and log to localstorage 
-
-
-//once start is clicked, the timer starts.
+startBtn.addEventListener("click", startQuiz);

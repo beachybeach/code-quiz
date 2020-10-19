@@ -5,8 +5,8 @@
 }
 
 body {
-    font-family: Helvetica, arial, sans-serif;
-    background-color: black;
+    font-family: Bebas Neue, Helvetica, arial;
+    background-image: url(../images/background.jpg);
 }
 
 header {
@@ -15,10 +15,11 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 30px;
-    font-size: 20px;
-    padding-top: 15px;
-    background-color: orange;
+    font-size: 25px;
+    background-color: #d46c1d;
     color: black;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 header a {
@@ -33,9 +34,10 @@ header a {
     margin: 30%;
     line-height: 1.2;
     margin-top: 15%;
-    background-color: orange;
+    background-color: #d46c1d;
     border-radius: 10px;
     padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .quiz-container h1 {
@@ -58,7 +60,7 @@ font-size: 55px;
 }
 
 .quiz-container button:hover {
-    background-color: grey;
+    background-color: 	#3e2310;
 }
 
 .timer {

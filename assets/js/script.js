@@ -7,6 +7,7 @@ var questionTitle = document.getElementById("question");
 var answersEl = document.getElementById("answers");
 var statusEl = document.getElementById("status");
 var resetButton = document.getElementById("resetButton");
+var highScores = document.getElementById("scores");
 
 //setup the timer
 var timer;
@@ -29,7 +30,7 @@ function countdown() {
 var quiz = [
     {
         question: "In The Silence of the Lambs, which city is Dr. Lecter imprisoned in?",
-        answers: ["Portland", "New York","Baltimore", "philadelphia"],
+        answers: ["Portland", "New York","Baltimore", "Philadelphia"],
         correct: 2,
     },
     
@@ -110,6 +111,8 @@ function clearStatus() {
         Math.floor((score / quiz.length) * 100) +
         "%";
 
+        localStorage.setItem("score", score);
+
         toggleElement(resetButton);
 
         // stops timer
@@ -177,4 +180,8 @@ function startQuiz() {
         updateQuestion(currentQuestion.question);
         updateAnswers(currentQuestion.answers);
   }
+
+
+
+  highScores.addEventListener("click", showHighScores);
   startBtn.addEventListener("click", startQuiz);

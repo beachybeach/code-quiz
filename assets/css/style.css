@@ -27,6 +27,13 @@ header a {
     text-decoration: none;
 }
 
+.high-scores {
+    font-size: 25px;
+    background-color: #d46c1d;
+    border: none;
+    font-family: bebas Neue, Helvetica, sans-serif;
+    font-weight: bold;
+}
 
 .quiz-container {
     width: 40%;

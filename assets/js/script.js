@@ -1,4 +1,4 @@
-//once button is clicked quiz questions appear and timer starts
+//get all of the elements ready for easy pickin's later
 var timerEl = document.getElementById('timer');
 var startBtn = document.getElementById('start');
 var introEl = document.getElementById("intro");
@@ -10,6 +10,8 @@ var resetButton = document.getElementById("resetButton");
 
 //setup the timer
 var timer;
+var penalty = 5;
+var timeLeft = 60;
 function countdown() {
     timer = setInterval(function () {
         if (timeLeft >= 1) {
@@ -23,8 +25,6 @@ function countdown() {
     }, 1000);
 }
 
-var penalty = 5;
-var timeLeft = 60;
 
 var quiz = [
     {
@@ -63,47 +63,45 @@ var quiz = [
         correct: 0,
     },
 ];
-    
-// This will toggle class 'hidden' which will hide/reveal #intro el
-function toggleIntro() {
-    if (introEl.classList.contains("hidden")) {
-      introEl.classList.remove("hidden");
-    } else {
-      introEl.classList.add("hidden");
-    }
+
+//setup quiz status
+var current = 0;
+var currentQuestion = quiz[current];
+var score = 0;    
+
+// Clears the #status element
+function clearStatus() {
+    statusEl.innerText = null;
   }
-
-
-  function toggleResetButton() {
-    if (resetButton.classList.contains("hidden")) {
-      resetButton.classList.remove("hidden");
+  
+  // Toggles visibility of an element.
+  function toggleElement(element) {
+    if (element.classList.contains("hidden")) {
+      element.classList.remove("hidden");
     } else {
-      resetButton.classList.add("hidden");
+      element.classList.add("hidden");
     }
   }
   
-  function startQuiz() {
-    var current = 0;
-    var currentQuestion = quiz[current];
-    var score - 0;
-
-    resetButton.onClick = function () {
-        toggleIntro();
-        resetQuiz();
-        toggleResetButton();
-    };
-
+  // Add onclick to reset button
+  resetButton.onclick = function () {
+    resetQuiz();
+  };
+  
     function resetQuiz() {
         current = 0;
+        score = 0;
         currentQuestion = quiz[current];
-        timerLeft = 60;
+        timeLeft = 60;
         questionTitle.innerText = "Halloween Quiz Challenge";
-        answersEl.innerHtml = null;
+        answersEl.innerHTML = null;
+        toggleElement(resetButton);
+        toggleElement(introEl);
     }
 
     function showResults() {
         questionTitle.innerText = "Results";
-        answersEl.innerHtml = 
+        answersEl.innerHTML = 
         "You got " +
         score + 
         " out of " +
@@ -112,17 +110,13 @@ function toggleIntro() {
         Math.floor((score / quiz.length) * 100) +
         "%";
 
-        toggleResetButton();
+        toggleElement(resetButton);
 
-        //stops timer
+        // stops timer
         clearInterval(timer);
 
         //clear status
         clearStatus();
-    }
-
-    function clearStatus() {
-        statusEl.innerText = null;
     }
 
     function nextQuestion() {
@@ -173,16 +167,14 @@ function toggleIntro() {
         });
     }
     //start countdown
+function startQuiz() {
+
     countdown();
     //hide intro
-    toggleIntro();
+    toggleElement(introEl);
 
-    //replace text with first question.
-    if (current === 0) {
+    // Start the quiz
         updateQuestion(currentQuestion.question);
         updateAnswers(currentQuestion.answers);
-    }
   }
-
-
-startBtn.addEventListener("click", startQuiz);
+  startBtn.addEventListener("click", startQuiz);
